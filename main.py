@@ -5,7 +5,7 @@ class MyFrame(wx.Frame):
     def __init__(self, parent, title):
         super(MyFrame, self).__init__(parent, title=title, size=(300, 300))
         panel = wx.Panel(self)
-        box = wx.BoxSizer(wx.HORIZONTAL)
+        box = wx.BoxSizer(wx.VERTICAL)
         self.text = wx.TextCtrl(panel, style=wx.TE_RIGHT)
         box.Add(self.text, 1, flag=wx.EXPAND | wx.ALL, border=5)
         vbox = wx.BoxSizer(wx.VERTICAL)
@@ -31,9 +31,9 @@ class MyFrame(wx.Frame):
         for i in stbox:
             btn = wx.Button(panel, label=i)
             gs.Add(btn, 0, wx.EXPAND)
-            btn.Bind(wx.EVT_BUTTON, self.OnButtonClicked)
+            btn.Bind(wx.EVT_BUTTON, self.on_button_clicked)
         clear = wx.Button(panel, label="Clear")
-        clear.Bind(wx.EVT_BUTTON, self.OnClearClicked)
+        clear.Bind(wx.EVT_BUTTON, self.on_clear_clicked)
         gs.Add(clear, 0, wx.EXPAND)
         vbox.Add(gs, proportion=1, flag=wx.EXPAND | wx.ALL, border=5)
         box.Add(vbox, proportion=1, flag=wx.EXPAND | wx.ALL, border=5)
@@ -42,7 +42,7 @@ class MyFrame(wx.Frame):
         self.Show()
         self.text.SetFocus()
 
-    def OnButtonClicked(self, e):
+    def on_button_clicked(self, e):
         label = e.GetEventObject().GetLabel()
         current_input = self.text.GetValue()
         new_input = current_input + label
@@ -59,7 +59,7 @@ class MyFrame(wx.Frame):
         else:
             self.text.SetValue(new_input)
 
-    def OnClearClicked(self, e):
+    def on_clear_clicked(self, e):
         self.text.SetValue("")
 
 
