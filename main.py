@@ -1,68 +1,56 @@
 import wx
+from typing import Any
 
 
-class MyFrame(wx.Frame):
-    def __init__(self, parent, title):
-        super(MyFrame, self).__init__(parent, title=title, size=(300, 300))
-        panel = wx.Panel(self)
-        box = wx.BoxSizer(wx.VERTICAL)
-        self.text = wx.TextCtrl(panel, style=wx.TE_RIGHT)
-        box.Add(self.text, 1, flag=wx.EXPAND | wx.ALL, border=5)
-        vbox = wx.BoxSizer(wx.VERTICAL)
-        stbox = [
-            "7",
-            "8",
-            "9",
-            "/",
-            "4",
-            "5",
-            "6",
-            "*",
-            "1",
-            "2",
-            "3",
-            "-",
-            "0",
-            ".",
-            "=",
-            "+",
+class CalculatorFrame(wx.Frame):
+    def __init__(self, parent: Any, title: str) -> None:
+        super().__init__(parent, title=title, size=(300, 300))
+        panel: wx.Panel = wx.Panel(self)
+        main_box: wx.BoxSizer = wx.BoxSizer(wx.VERTICAL)
+        self.text_field: wx.TextCtrl = wx.TextCtrl(panel, style=wx.TE_RIGHT)
+        main_box.Add(self.text_field, 1, flag=wx.EXPAND | wx.ALL, border=5)
+        button_box: wx.BoxSizer = wx.BoxSizer(wx.VERTICAL)
+        button_labels = [
+            "7", "8", "9", "/", "4", "5", "6", "*", "1", "2", "3", "-", "0",
+            ".", "=", "+"
         ]
-        gs = wx.GridSizer(5, 4, 10, 10)
-        for i in stbox:
-            btn = wx.Button(panel, label=i)
-            gs.Add(btn, 0, wx.EXPAND)
-            btn.Bind(wx.EVT_BUTTON, self.on_button_clicked)
-        clear = wx.Button(panel, label="Clear")
-        clear.Bind(wx.EVT_BUTTON, self.on_clear_clicked)
-        gs.Add(clear, 0, wx.EXPAND)
-        vbox.Add(gs, proportion=1, flag=wx.EXPAND | wx.ALL, border=5)
-        box.Add(vbox, proportion=1, flag=wx.EXPAND | wx.ALL, border=5)
-        panel.SetSizerAndFit(box)
+        button_grid: wx.GridSizer = wx.GridSizer(5, 4, 10, 10)
+        for label in button_labels:
+            button: wx.Button = wx.Button(panel, label=label)
+            button_grid.Add(button, 0, wx.EXPAND)
+            button.Bind(wx.EVT_BUTTON, self.on_button_click)
+        clear_button: wx.Button = wx.Button(panel, label="Clear")
+        clear_button.Bind(wx.EVT_BUTTON, self.on_clear_click)
+        button_grid.Add(clear_button, 0, wx.EXPAND)
+        button_box.Add(button_grid, proportion=1, flag=wx.EXPAND | wx.ALL,
+                       border=5)
+        main_box.Add(button_box, proportion=1, flag=wx.EXPAND | wx.ALL,
+                     border=5)
+        panel.SetSizerAndFit(main_box)
         self.Centre()
         self.Show()
-        self.text.SetFocus()
+        self.text_field.SetFocus()
 
-    def on_button_clicked(self, e):
-        label = e.GetEventObject().GetLabel()
-        current_input = self.text.GetValue()
-        new_input = current_input + label
+    def on_button_click(self, event: wx.Event) -> None:
+        label: str = event.GetEventObject().GetLabel()
+        current_input: str = self.text_field.GetValue()
+        new_input: str = current_input + label
         if "=" in new_input:
             if new_input.count("=") > 1 or new_input[-1] != "=":
                 return
             try:
-                compute = new_input.rstrip("=")
-                # compute the expression
-                result = str(eval(compute))
-                self.text.SetValue(result)
+                expression: str = new_input.rstrip("=")
+                result: str = str(eval(expression))
+                self.text_field.SetValue(result)
             except Exception as ex:
                 wx.MessageBox("Invalid input", "Error", wx.OK | wx.ICON_ERROR)
         else:
-            self.text.SetValue(new_input)
+            self.text_field.SetValue(new_input)
 
-    def on_clear_clicked(self, e):
-        self.text.SetValue("")
+    def on_clear_click(self, event: wx.Event) -> None:
+        self.text_field.SetValue("")
 
 
-app = wx.App()
-MyFrame(None, "Calculator")
+app: wx.App = wx.App()
+CalculatorFrame(None, "Calculator")
 app.MainLoop()
