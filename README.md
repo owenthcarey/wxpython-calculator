@@ -2,6 +2,11 @@
 
 This is a simple calculator application built with wxPython. It provides basic arithmetic operations such as addition, subtraction, multiplication, and division.
 
+<p float="left">
+  <img src="./.github/images/light.gif" width="400" />
+  <img src="./.github/images/dark.gif" width="400" /> 
+</p>
+
 ## Getting Started
 
 To get started with this project, follow the instructions below:
